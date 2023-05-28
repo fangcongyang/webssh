@@ -1,0 +1,4 @@
+# Default ignored files
+./webssh.exe
+./go.sum
+.idea
