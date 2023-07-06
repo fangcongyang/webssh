@@ -1,3 +1,4 @@
+//go:generate goversioninfo -manifest=resource/goversioninfo.exe.mainfest
 package main
 
 import (
