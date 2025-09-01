@@ -3,7 +3,6 @@ package webssh
 import (
 	"encoding/base64"
 	"fmt"
-	"go.uber.org/zap"
 	"io"
 	"time"
 
@@ -19,15 +18,15 @@ const (
 type Turn struct {
 	StdinPipe io.WriteCloser
 	Session   *ssh.Session
-	WsConn  *websocket.Conn
+	WsConn    *websocket.Conn
 	Recorder  *Recorder
 }
 
-func NewTurn(wsConn  *websocket.Conn) *Turn {
+func NewTurn(wsConn *websocket.Conn) *Turn {
 	return &Turn{WsConn: wsConn}
 }
 
-func (t *Turn) initSshConn(sshClient *ssh.Client, rec *Recorder)  {
+func (t *Turn) initSshConn(sshClient *ssh.Client, rec *Recorder) {
 	sess, err := sshClient.NewSession()
 	if err != nil {
 		t.WsConn.WriteControl(websocket.CloseMessage,
@@ -70,7 +69,7 @@ func (t *Turn) initSshConn(sshClient *ssh.Client, rec *Recorder)  {
 	go func() {
 		err := t.SessionWait()
 		if err != nil {
-			println(fmt.Errorf("session错误:{}", zap.Any("err", err)))
+			println(fmt.Errorf("session错误: %v", err))
 		}
 	}()
 }
@@ -130,7 +129,7 @@ func encode(p []byte) []byte {
 
 type Command struct {
 	OperType string `json:"operType"`
-	Cols int `json:"cols"`
-	Rows    int `json:"rows"`
-	Command string `json:"command"`
+	Cols     int    `json:"cols"`
+	Rows     int    `json:"rows"`
+	Command  string `json:"command"`
 }

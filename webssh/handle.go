@@ -2,23 +2,24 @@ package webssh
 
 import (
 	"fmt"
-	"golang.org/x/crypto/ssh"
 	"net/http"
 	"os"
 	"path"
 	"time"
 
+	"golang.org/x/crypto/ssh"
+
 	"github.com/gorilla/websocket"
 )
 
 type WebSSHConfig struct {
-	Record     bool
-	RecPath    string
-	HostAddr   string
-	Username   string
-	Password   string
-	AuthModel  AuthModel
-	PkPath     string
+	Record    bool
+	RecPath   string
+	HostAddr  string
+	Username  string
+	Password  string
+	AuthModel AuthModel
+	PkPath    string
 }
 
 type WebSSH struct {
@@ -67,9 +68,10 @@ func (w WebSSH) ServeConn(wsConn *websocket.Conn) (c *ssh.Client, r *Recorder) {
 	if w.Record {
 		os.MkdirAll(w.RecPath, 0766)
 		fileName := path.Join(w.RecPath, fmt.Sprintf("%s_%s_%s.cast", w.HostAddr, w.Username, time.Now().Format("20060102_150405")))
-		f, err := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0766)
+		var f *os.File
+		f, err = os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0766)
 		if err != nil {
-			fmt.Errorf("初始化日志文件失败")
+			println(fmt.Errorf("初始化日志文件失败: %v", err))
 		}
 		defer f.Close()
 		recorder = NewRecorder(f)

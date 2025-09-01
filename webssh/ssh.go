@@ -1,9 +1,10 @@
 package webssh
 
 import (
-	"golang.org/x/crypto/ssh"
-	"io/ioutil"
+	"os"
 	"time"
+
+	"golang.org/x/crypto/ssh"
 )
 
 type AuthModel int8
@@ -66,7 +67,7 @@ func NewSSHClient(conf *SSHClientConfig) (*ssh.Client, error) {
 }
 
 func getKey(keyPath string) (ssh.Signer, error) {
-	key, err := ioutil.ReadFile(keyPath)
+	key, err := os.ReadFile(keyPath)
 	if err != nil {
 		return nil, err
 	}
